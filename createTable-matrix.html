@@ -1,0 +1,115 @@
+<!-- 
+Similar Example: https://www.w3resource.com/javascript-exercises/javascript-dom-exercise-7.php
+
+number of rows: 4
+number of columns: 5
+"Submit"
+
+Print this:
+1 8  9 16 17
+2 7 10 15 18
+3 6 11 14 19
+4 5 12 13 20       
+-->
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 120px;
+      }
+      .tdPadding > tbody > tr > td {
+        padding: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <form id="form">
+      <label for="rows">Number of rows:</label>
+      <input type="text" name="rows" id="row" value="4" />
+
+      <label for="columns">Number of columns:</label>
+      <input
+        type="text"
+        name="columns"
+        id="col"
+        value="5"
+        style="margin-bottom: 30px"
+      />
+
+      <input type="submit" onclick="createTable()" value="Submit" id="button" />
+    </form>
+
+    <table id="matrix"></table>
+  </body>
+  <script>
+    document
+      .querySelector("#button")
+      .addEventListener("click", function (event) {
+        event.preventDefault();
+      });
+
+    function createTable() {
+      let rows = document.getElementById("row").value;
+      let cols = document.getElementById("col").value;
+
+      if (rows !== "" && cols !== "") {
+        let table = document.getElementById("matrix");
+        table.setAttribute("border", "1");
+        table.setAttribute("class", "tdPadding");
+
+        // Time: O(n^2)
+        // 1. Define an array as matrix.
+        // 2. Start a loop for all rows, define currentRow
+        // 3. Iterate through rows first
+        // 4. Start a loop for all columns.
+        // 5. Calculate values for the first column
+        // 5. Then calculate values for the first row
+        //    a. for even columns: rows * colIndex + 1 => 4 * 2 + 1 = 9
+        //    b. then for odd columns: rows * (colIndex + 1) => 4 * (1 + 1) = 8
+        // 7. Then calculate the rest of the cells
+        //    a. for even columns: matrix[rowIndex - 1][colIndex] + 1 => matrix[0][2] + 1 = 10
+        //    b. then for odd columns: matrix[rowIndex - 1][colIndex] - 1 => matrix[0][1] - 1 = 7
+
+        let matrix = [];
+        for (let rowIndex = 0; rowIndex < rows; rowIndex++) {
+          let currentRow = [];
+          let r = document.getElementById("matrix").insertRow(rowIndex);
+          for (let colIndex = 0; colIndex < cols; colIndex++) {
+            var c = r.insertCell(colIndex);
+            if (colIndex === 0) {
+              currentRow.push(rowIndex + 1);
+              c.innerHTML = rowIndex + 1;
+            } else if (rowIndex === 0) {
+              if (colIndex % 2 === 0) {
+                currentRow.push(rows * colIndex + 1); // even col, 4 * 0 + 1 = 1, 4 * 2 + 1 = 9 like 1, 9, 17...
+                c.innerHTML = rows * colIndex + 1;
+              } else {
+                currentRow.push(rows * (colIndex + 1)); // odd col, 4 * (1 + 1) = 8 like 8, 16, 24 ...
+                c.innerHTML = rows * (colIndex + 1);
+              }
+            } else {
+              if (colIndex % 2 === 0) {
+                currentRow.push(matrix[rowIndex - 1][colIndex] + 1); // even col, matrix[0][2] + 1 = 10 simply add 1 from prev row, same col
+                c.innerHTML = matrix[rowIndex - 1][colIndex] + 1;
+              } else {
+                currentRow.push(matrix[rowIndex - 1][colIndex] - 1); // odd col, matrix[0][1] - 1 simply subtract 1 from prev row, same col
+                c.innerHTML = matrix[rowIndex - 1][colIndex] - 1;
+                // console.log('matrix[rowIndex - 1][colIndex]', matrix[rowIndex - 1][colIndex] - 1);
+              }
+            }
+          }
+          matrix.push(currentRow); // Push current row in our matrix.
+          // currentRow: [1, 8, 9, 16, 17], [2, 7, 10, 15, 18], [3, 6, 11, 14, 19], [4, 5, 12, 13, 20]
+        }
+      } else {
+        window.alert("Rows or columns can not be empty ");
+      }
+    }
+  </script>
+</html>
