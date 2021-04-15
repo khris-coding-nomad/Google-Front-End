@@ -1,0 +1,85 @@
+<!-- 
+Similar Example: https://www.w3resource.com/javascript-exercises/javascript-dom-exercise-7.php
+
+number of rows: 4
+number of columns: 5
+"Submit"
+
+Print this:
+1 8  9 16 17
+2 7 10 15 18
+3 6 11 14 19
+4 5 12 13 20       
+-->
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 120px;
+      }
+      .tdPadding > tbody > tr > td {
+        padding: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <form id="form">
+      <label for="rows">Number of rows:</label>
+      <input type="text" name="rows" id="row" value="4" />
+
+      <label for="columns">Number of columns:</label>
+      <input
+        type="text"
+        name="columns"
+        id="col"
+        value="5"
+        style="margin-bottom: 30px"
+      />
+
+      <input type="submit" onclick="createTable()" value="Submit" id="button" />
+    </form>
+
+    <table id="matrix"></table>
+  </body>
+  <script>
+    document
+      .querySelector("#button")
+      .addEventListener("click", function (event) {
+        event.preventDefault();
+      });
+
+    function createTable() {
+      let rows = document.getElementById("row").value;
+      let cols = document.getElementById("col").value;
+
+      if (rows !== "" && cols !== "") {
+        let table = document.getElementById("matrix");
+        table.setAttribute("border", "1");
+        table.setAttribute("class", "tdPadding");
+
+        for (let rowIndex = 0; rowIndex < rows; rowIndex++) {
+          let currentRow = [];
+          let r = document.getElementById("matrix").insertRow(rowIndex);
+          for (let colIndex = 0; colIndex < cols; colIndex++) {
+            var c = r.insertCell(colIndex);
+            if (colIndex % 2 === 0) {
+              currentRow.push(rows * colIndex + 1 + rowIndex);
+              c.innerHTML = rows * colIndex + 1 + rowIndex;
+            } else {
+              currentRow.push(rows * (colIndex + 1) - rowIndex);
+              c.innerHTML = rows * (colIndex + 1) - rowIndex;
+            }
+          }
+        }
+      } else {
+        window.alert("Rows or columns can not be empty ");
+      }
+    }
+  </script>
+</html>
